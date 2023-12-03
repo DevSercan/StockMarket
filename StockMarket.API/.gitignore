@@ -1,0 +1,5 @@
+# .gitignore
+bin/
+obj/
+StockMarket.API.csproj.user
+StockMarket.API.http
