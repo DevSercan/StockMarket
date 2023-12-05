@@ -5,17 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockMarket.Entities
+namespace StockMarket.Business.DTOs
 {
-    public class User : IEntity
+    public class UserRegisterDTO
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; } // Primary Key
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; } // Foreign Key
-        public decimal Balance { get; set; }
     }
 }

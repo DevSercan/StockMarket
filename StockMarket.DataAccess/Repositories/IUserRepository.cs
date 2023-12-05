@@ -9,6 +9,7 @@ namespace StockMarket.DataAccess.Repositories
 {
     public interface IUserRepository
     {
+        Task<User?> GetByEmail(string email);
         Task<User?> Get(int id);
         Task<User> Create(User user);
         Task Update(User user);

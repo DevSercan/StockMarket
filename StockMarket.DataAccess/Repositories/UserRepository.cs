@@ -34,6 +34,11 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
+        public async Task<User?> GetByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<User?> Get(int id)
         {
             return await _context.Users.FindAsync(id);
