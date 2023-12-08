@@ -75,8 +75,8 @@ namespace StockMarket.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("UpdateBalance/{userId:int}/{balance:decimal}")]
-        [Authorize]
         public async Task<ActionResult<User>> UpdateBalance(int userId, decimal balance)
         {
             try
