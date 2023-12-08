@@ -13,6 +13,8 @@ namespace StockMarket.DataAccess.Repositories
         Task<User?> Get(int id);
         Task<User> Create(User user);
         Task Update(User user);
+        Task ChangeUserRole(int userId, int roleId);
+        Task UpdateBalance(int userId, decimal balance);
         Task Delete(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
@@ -48,6 +49,57 @@ namespace StockMarket.API.Controllers
             return Ok(existingUser);
         }
 
+        // HttpPut: Tüm bilgileri günceller. HttpPatch: Belirli bir alanı günceller. Bu yüzden HttpPatch kullanıyoruz.
+        [HttpPatch("ChangeUserRole/{userId:int}/{roleId:int}")]
+        public async Task<ActionResult<User>> ChangeUserRole(int userId, int roleId)
+        {
+            try
+            {
+                await _userRepository.ChangeUserRole(userId, roleId);
+                var updatedUser = await _userRepository.Get(userId);
+
+                if (updatedUser == null)
+                {
+                    return NotFound("User not found after role change");
+                }
+
+                return Ok(updatedUser);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPatch("UpdateBalance/{userId:int}/{balance:decimal}")]
+        [Authorize]
+        public async Task<ActionResult<User>> UpdateBalance(int userId, decimal balance)
+        {
+            try
+            {
+                await _userRepository.UpdateBalance(userId, balance);
+                var updatedUser = await _userRepository.Get(userId);
+
+                if (updatedUser == null)
+                {
+                    return NotFound("User not found after balance update");
+                }
+
+                return Ok(updatedUser);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User?>> GetUser(int id)

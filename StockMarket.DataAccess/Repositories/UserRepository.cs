@@ -49,5 +49,29 @@ namespace StockMarket.DataAccess.Repositories
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task ChangeUserRole(int userId, int roleId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            user.RoleId = roleId;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateBalance(int userId, decimal balance)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid User Id");
+            }
+            user.Balance = balance;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
     }
 }
