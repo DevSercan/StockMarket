@@ -67,6 +67,7 @@ namespace StockMarket.API.Controllers
 
         // HttpPut: Tüm bilgileri günceller. HttpPatch: Belirli bir alanı günceller. Bu yüzden HttpPatch kullanıyoruz.
         [HttpPatch("ChangeUserRole/{userId:int}/{roleId:int}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<User>> ChangeUserRole(int userId, int roleId)
         {
             try
