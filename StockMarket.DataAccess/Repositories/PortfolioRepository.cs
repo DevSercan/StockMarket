@@ -12,7 +12,6 @@ namespace StockMarket.DataAccess.Repositories
     public class PortfolioRepository : IPortfolioRepository
     {
         private readonly StockMarketContext _context;
-
         public PortfolioRepository(StockMarketContext context)
         {
             _context = context;

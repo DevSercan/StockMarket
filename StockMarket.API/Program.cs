@@ -38,6 +38,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<TokenService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+
 builder.Services.AddDbContext<StockMarketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketContext")));
 

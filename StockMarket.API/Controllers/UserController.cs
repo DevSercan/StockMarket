@@ -18,11 +18,13 @@ namespace StockMarket.API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly TokenService _tokenService;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserController(IUserRepository userRepository, TokenService tokenService)
+        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _roleRepository = roleRepository;
         }
 
         [HttpPost("register")]
@@ -54,9 +56,10 @@ namespace StockMarket.API.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
+            var role = await _roleRepository.Get(existingUser.RoleId);
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, role.Name)
             };
             var token = _tokenService.GenerateToken(claims);
             return Ok(new { User = existingUser, Token = token });
@@ -88,7 +91,7 @@ namespace StockMarket.API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPatch("UpdateBalance/{userId:int}/{balance:decimal}")]
         public async Task<ActionResult<User>> UpdateBalance(int userId, decimal balance)
         {

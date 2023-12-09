@@ -12,7 +12,6 @@ namespace StockMarket.DataAccess.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly StockMarketContext _context;
-
         public UserRepository(StockMarketContext context)
         {
             _context = context;
