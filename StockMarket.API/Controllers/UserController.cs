@@ -56,7 +56,7 @@ namespace StockMarket.API.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("Role", "Admin")
+                new Claim(ClaimTypes.Role, "Admin")
             };
             var token = _tokenService.GenerateToken(claims);
             return Ok(new { User = existingUser, Token = token });
