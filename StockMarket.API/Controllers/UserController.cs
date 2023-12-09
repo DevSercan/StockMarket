@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using StockMarket.API.Controllers.Services;
 using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
 using StockMarket.Entities;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace StockMarket.API.Controllers
 {
@@ -12,10 +17,12 @@ namespace StockMarket.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly TokenService _tokenService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, TokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -46,7 +53,13 @@ namespace StockMarket.API.Controllers
             {
                 return Unauthorized("Invalid email or password");
             }
-            return Ok(existingUser);
+
+            var claims = new List<Claim>
+            {
+                new Claim("Role", "Admin")
+            };
+            var token = _tokenService.GenerateToken(claims);
+            return Ok(new { User = existingUser, Token = token });
         }
 
         // HttpPut: Tüm bilgileri günceller. HttpPatch: Belirli bir alanı günceller. Bu yüzden HttpPatch kullanıyoruz.
