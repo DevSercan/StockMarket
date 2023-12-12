@@ -118,21 +118,21 @@ namespace StockMarket.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetUser/{id}")]
         public async Task<ActionResult<User?>> GetUser(int id)
         {
             return await _userRepository.Get(id);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser([FromBody] User user)
+        [HttpPost("CreateUser")]
+        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
         {
             var newUser = await _userRepository.Create(user);
-            return CreatedAtAction(nameof(PostUser), new { id = newUser.Id }, newUser);
+            return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> PutUser(int id, [FromBody] User user)
+        [HttpPut("UpdateUser/{id}")]
+        public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
             {
@@ -143,7 +143,7 @@ namespace StockMarket.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteUser/{id}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             var userToDelete = await _userRepository.Get(id);

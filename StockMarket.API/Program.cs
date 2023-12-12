@@ -37,6 +37,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<TokenService>();
 
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
@@ -51,6 +52,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "StockMarket", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        
         Name = "Authorization",
         Description = "Enter Your JWT Token",
         In = ParameterLocation.Header,

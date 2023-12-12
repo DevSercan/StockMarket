@@ -34,9 +34,9 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
-        public Task<Portfolio?> Get(int id)
+        public async Task<Portfolio?> Get(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Portfolios.FindAsync(id);
         }
 
         public async Task<Portfolio?> GetByStockId(int id)

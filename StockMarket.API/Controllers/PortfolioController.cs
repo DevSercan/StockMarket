@@ -17,7 +17,7 @@ namespace StockMarket.API.Controllers
             _portfolioRepository = portfolioRepository;
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreatePortfolio")]
         public async Task<ActionResult<Portfolio>> CreatePortfolio([FromBody] PortfolioDTO portfolio)
         {
             var newPortfolio = new Portfolio
@@ -30,7 +30,7 @@ namespace StockMarket.API.Controllers
         }
 
 
-        [HttpGet("{userId}")]
+        [HttpGet("GetByUserId/{userId}")]
         public async Task<ActionResult<Portfolio?>> GetByUserId(int id)
         {
             var portfolio = await _portfolioRepository.GetByUserId(id);
@@ -41,7 +41,7 @@ namespace StockMarket.API.Controllers
             return portfolio;
         }
 
-        [HttpGet("{stockId}")]
+        [HttpGet("GetByStockId/{stockId}")]
         public async Task<ActionResult<Portfolio?>> GetByStockId(int id)
         {
             var portfolio = await _portfolioRepository.GetByStockId(id);
@@ -52,7 +52,7 @@ namespace StockMarket.API.Controllers
             return portfolio;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetPortfolio/{id}")]
         public async Task<ActionResult<Portfolio?>> GetPortfolio(int id)
         {
             return await _portfolioRepository.Get(id);
