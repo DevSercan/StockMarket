@@ -41,6 +41,7 @@ builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+builder.Services.AddScoped<StockService>();
 
 builder.Services.AddDbContext<StockMarketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketContext")));

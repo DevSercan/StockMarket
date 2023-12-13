@@ -17,16 +17,9 @@ namespace StockMarket.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task ChangeStockActivity(int id, bool isActive)
+        public async Task<Stock?> Get(int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
-            if (stock == null)
-            {
-                throw new ArgumentException("Invalid Stock Id");
-            }
-            stock.IsActive = isActive;
-            _context.Entry(stock).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return await _context.Stocks.FindAsync(id);
         }
 
         public async Task<Stock> Create(Stock stock)
@@ -34,6 +27,12 @@ namespace StockMarket.DataAccess.Repositories
             _context.Stocks.Add(stock);
             await _context.SaveChangesAsync();
             return stock;
+        }
+
+        public async Task Update(Stock stock)
+        {
+            _context.Entry(stock).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
@@ -46,13 +45,43 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
-        public async Task<Stock?> Get(int id)
+        public async Task ChangeStockActivity(int id, bool isActive)
         {
-            return await _context.Stocks.FindAsync(id);
+            var stock = await _context.Stocks.FindAsync(id);
+            if (stock == null)
+            {
+                throw new ArgumentException("Invalid Stock Id");
+            }
+            stock.IsActive = isActive;
+            _context.Entry(stock).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Stock stock)
+        public async Task<Stock?> GetByName(string name)
         {
+            return await _context.Stocks.FirstOrDefaultAsync(s => s.Name == name);
+        }
+
+        public async Task UpdatePriceByName(string name, decimal price)
+        {
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Name == name);
+            if (stock == null)
+            {
+                throw new ArgumentException("Invalid Stock Name");
+            }
+            stock.Price = price;
+            _context.Entry(stock).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateQuantityByName(string name, int quantity)
+        {
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Name == name);
+            if (stock == null)
+            {
+                throw new ArgumentException("Invalid Stock Name");
+            }
+            stock.Quantity = quantity;
             _context.Entry(stock).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

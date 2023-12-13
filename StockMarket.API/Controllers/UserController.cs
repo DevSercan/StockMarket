@@ -19,12 +19,14 @@ namespace StockMarket.API.Controllers
         private readonly IUserRepository _userRepository;
         private readonly TokenService _tokenService;
         private readonly IRoleRepository _roleRepository;
+        private readonly StockService _stockService;
 
-        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository)
+        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository, StockService stockService)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _roleRepository = roleRepository;
+            _stockService = stockService;
         }
 
         [HttpPost("register")]
@@ -121,6 +123,7 @@ namespace StockMarket.API.Controllers
         [HttpGet("GetUser/{id}")]
         public async Task<ActionResult<User?>> GetUser(int id)
         {
+            await _stockService.FetchStockData();
             return await _userRepository.Get(id);
         }
 
