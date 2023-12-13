@@ -14,7 +14,7 @@ namespace StockMarket.Entities
         public int UserId { get; set; } // Foreign Key
         public int StockId { get; set; } // Foreign Key
         public string Type { get; set; }
-        public string Date { get; set; } // DateTime
+        public DateTime Date { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public decimal Commission { get; set; }

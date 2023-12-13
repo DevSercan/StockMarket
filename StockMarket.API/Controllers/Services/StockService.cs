@@ -20,6 +20,7 @@ namespace StockMarket.API.Controllers.Services
             _stockRepository = stockRepository;
             _priceHistoryRepository = priceHistoryRepository;
         }
+
         public async Task FetchStockData()
         {
             string url = "https://bigpara.hurriyet.com.tr/borsa/canli-borsa/";
@@ -47,7 +48,7 @@ namespace StockMarket.API.Controllers.Services
                         {
                             Name = name,
                             Price = price,
-                            Quantity = 1000,
+                            Quantity = 10000,
                             IsActive = true
                         };
                         await _stockRepository.Create(newStock);
