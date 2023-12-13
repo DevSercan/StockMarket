@@ -12,7 +12,7 @@ namespace StockMarket.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // Primary Key
         public int StockId { get; set; } // Foreign Key
-        public string Date { get; set; } // DateTime
+        public DateTime Date { get; set; }
         public decimal Price { get; set; }
     }
 }

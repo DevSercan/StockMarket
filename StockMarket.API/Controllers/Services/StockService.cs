@@ -14,9 +14,11 @@ namespace StockMarket.API.Controllers.Services
     public class StockService
     {
         private readonly IStockRepository _stockRepository;
-        public StockService(IStockRepository stockRepository)
+        private readonly IPriceHistoryRepository _priceHistoryRepository;
+        public StockService(IStockRepository stockRepository, IPriceHistoryRepository priceHistoryRepository)
         {
             _stockRepository = stockRepository;
+            _priceHistoryRepository = priceHistoryRepository;
         }
         public async Task FetchStockData()
         {
@@ -39,6 +41,7 @@ namespace StockMarket.API.Controllers.Services
                     if (check != null)
                     {
                         await _stockRepository.UpdatePriceByName(name, price);
+                        await UpdateStockHistory(check, price);
                     } else {
                         var newStock = new Stock
                         {
@@ -48,10 +51,19 @@ namespace StockMarket.API.Controllers.Services
                             IsActive = true
                         };
                         await _stockRepository.Create(newStock);
+                        await UpdateStockHistory(newStock, price);
                     }
                 }
             }
-
+        }
+        private async Task UpdateStockHistory(Stock stock, decimal price)
+        {
+            await _stockRepository.UpdatePriceByName(stock.Name, price);
+            var history = await _priceHistoryRepository.GetByStockId(stock.Id);
+            if (history == null || history.Price != price)
+            {
+                await _priceHistoryRepository.Create(stock.Id, price);
+            }
         }
     }
 }
