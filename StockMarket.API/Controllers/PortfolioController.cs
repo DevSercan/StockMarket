@@ -11,7 +11,6 @@ namespace StockMarket.API.Controllers
     public class PortfolioController : ControllerBase
     {
         private readonly IPortfolioRepository _portfolioRepository;
-
         public PortfolioController(IPortfolioRepository portfolioRepository)
         {
             _portfolioRepository = portfolioRepository;

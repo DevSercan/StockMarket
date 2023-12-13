@@ -43,6 +43,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IPriceHistoryRepository, PriceHistoryRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ICommissionRepository, CommissionRepository>();
 builder.Services.AddScoped<StockService>();
 
 builder.Services.AddDbContext<StockMarketContext>(options =>

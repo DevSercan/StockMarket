@@ -85,5 +85,16 @@ namespace StockMarket.DataAccess.Repositories
             _context.Entry(stock).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<decimal> GetPriceById(int id)
+        {
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            if (stock != null)
+            {
+                return stock.Price;
+            } else {
+                return 0m;
+            }
+        }
     }
 }

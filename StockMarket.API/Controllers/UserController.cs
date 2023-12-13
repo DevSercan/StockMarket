@@ -67,60 +67,7 @@ namespace StockMarket.API.Controllers
             return Ok(new { User = existingUser, Token = token });
         }
 
-        // HttpPut: Tüm bilgileri günceller. HttpPatch: Belirli bir alanı günceller. Bu yüzden HttpPatch kullanıyoruz.
-        [HttpPatch("ChangeUserRole/{userId:int}/{roleId:int}")]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<User>> ChangeUserRole(int userId, int roleId)
-        {
-            try
-            {
-                await _userRepository.ChangeUserRole(userId, roleId);
-                var updatedUser = await _userRepository.Get(userId);
-
-                if (updatedUser == null)
-                {
-                    return NotFound("User not found after role change");
-                }
-
-                return Ok(updatedUser);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpPatch("UpdateBalance/{userId:int}/{balance:decimal}")]
-        public async Task<ActionResult<User>> UpdateBalance(int userId, decimal balance)
-        {
-            try
-            {
-                await _userRepository.UpdateBalance(userId, balance);
-                var updatedUser = await _userRepository.Get(userId);
-
-                if (updatedUser == null)
-                {
-                    return NotFound("User not found after balance update");
-                }
-
-                return Ok(updatedUser);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
-
-        [HttpGet("GetUser/{id}")]
+        [HttpGet("GetUser/{id:int}")]
         public async Task<ActionResult<User?>> GetUser(int id)
         {
             await _stockService.FetchStockData();
@@ -134,7 +81,7 @@ namespace StockMarket.API.Controllers
             return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
         }
 
-        [HttpPut("UpdateUser/{id}")]
+        [HttpPut("UpdateUser/{id:int}")]
         public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
@@ -146,7 +93,7 @@ namespace StockMarket.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpDelete("DeleteUser/{id:int}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             var userToDelete = await _userRepository.Get(id);

@@ -26,6 +26,7 @@ namespace StockMarket.DataAccess.Context
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Commission> Commissions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
