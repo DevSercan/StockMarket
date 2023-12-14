@@ -16,6 +16,18 @@ namespace StockMarket.DataAccess.Repositories
         {
             _context = context;
         }
+
+        public async Task<User?> Get(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
+
+        public async Task Update(User user)
+        {
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<User> Create(User user)
         {
             _context.Users.Add(user);
@@ -36,17 +48,6 @@ namespace StockMarket.DataAccess.Repositories
         public async Task<User?> GetByEmail(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<User?> Get(int id)
-        {
-            return await _context.Users.FindAsync(id);
-        }
-
-        public async Task Update(User user)
-        {
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
         }
 
         public async Task ChangeUserRole(int userId, int roleId)
@@ -71,6 +72,19 @@ namespace StockMarket.DataAccess.Repositories
             user.Balance = balance;
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<decimal> GetBalanceById(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(s => s.Id == id);
+            if (user != null)
+            {
+                return user.Balance;
+            }
+            else
+            {
+                return 0m;
+            }
         }
     }
 }

@@ -67,13 +67,14 @@ namespace StockMarket.API.Controllers
             return Ok(new { User = existingUser, Token = token });
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetUser/{id:int}")]
         public async Task<ActionResult<User?>> GetUser(int id)
         {
-            await _stockService.FetchStockData();
             return await _userRepository.Get(id);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("CreateUser")]
         public async Task<ActionResult<User>> CreateUser([FromBody] User user)
         {
@@ -81,6 +82,7 @@ namespace StockMarket.API.Controllers
             return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateUser/{id:int}")]
         public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
         {
@@ -93,6 +95,7 @@ namespace StockMarket.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteUser/{id:int}")]
         public async Task<ActionResult> DeleteUser(int id)
         {

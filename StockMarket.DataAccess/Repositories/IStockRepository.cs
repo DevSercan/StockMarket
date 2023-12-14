@@ -16,7 +16,9 @@ namespace StockMarket.DataAccess.Repositories
         Task<Stock?> GetByName(string name);
         Task ChangeStockActivity(int id, bool isActive);
         Task UpdatePriceByName(string name, decimal price);
-        Task UpdateQuantityByName(string name, int quantity);
+        Task UpdateQuantityById(int id, int quantity);
         Task<decimal> GetPriceById(int id);
+        Task<bool> GetActivityById(int id);
+        Task<int> GetQuantityById(int id);
     }
 }

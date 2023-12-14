@@ -74,12 +74,12 @@ namespace StockMarket.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateQuantityByName(string name, int quantity)
+        public async Task UpdateQuantityById(int id, int quantity)
         {
-            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Name == name);
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
             if (stock == null)
             {
-                throw new ArgumentException("Invalid Stock Name");
+                throw new ArgumentException("Invalid Stock Id");
             }
             stock.Quantity = quantity;
             _context.Entry(stock).State = EntityState.Modified;
@@ -94,6 +94,32 @@ namespace StockMarket.DataAccess.Repositories
                 return stock.Price;
             } else {
                 return 0m;
+            }
+        }
+
+        public async Task<bool> GetActivityById(int id)
+        {
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            if (stock != null)
+            {
+                return stock.IsActive;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<int> GetQuantityById(int id)
+        {
+            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            if (stock != null)
+            {
+                return stock.Quantity;
+            }
+            else
+            {
+                return 0;
             }
         }
     }
