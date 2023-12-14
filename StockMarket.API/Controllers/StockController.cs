@@ -24,6 +24,7 @@ namespace StockMarket.API.Controllers
             return await _stockRepository.Get(id);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("CreateStock")]
         public async Task<ActionResult<Stock>> CreateStock([FromBody] Stock stock)
         {
@@ -31,6 +32,7 @@ namespace StockMarket.API.Controllers
             return CreatedAtAction(nameof(CreateStock), new { id = newStock.Id }, newStock);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateStock/{id}")]
         public async Task<ActionResult> UpdateStock(int id, [FromBody] Stock stock)
         {
@@ -43,6 +45,7 @@ namespace StockMarket.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteStock/{id}")]
         public async Task<ActionResult> DeleteStock(int id)
         {

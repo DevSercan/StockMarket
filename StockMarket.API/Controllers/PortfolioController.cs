@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
@@ -16,6 +17,7 @@ namespace StockMarket.API.Controllers
             _portfolioRepository = portfolioRepository;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("CreatePortfolio")]
         public async Task<ActionResult<Portfolio>> CreatePortfolio([FromBody] PortfolioDTO portfolio)
         {
@@ -28,7 +30,7 @@ namespace StockMarket.API.Controllers
             return CreatedAtAction(nameof(CreatePortfolio), new { id = createdPortfolio.Id }, createdPortfolio);
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpGet("GetByUserId/{userId}")]
         public async Task<ActionResult<Portfolio?>> GetByUserId(int id)
         {
@@ -40,6 +42,7 @@ namespace StockMarket.API.Controllers
             return portfolio;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetByStockId/{stockId}")]
         public async Task<ActionResult<Portfolio?>> GetByStockId(int id)
         {
@@ -51,6 +54,7 @@ namespace StockMarket.API.Controllers
             return portfolio;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("GetPortfolio/{id}")]
         public async Task<ActionResult<Portfolio?>> GetPortfolio(int id)
         {
