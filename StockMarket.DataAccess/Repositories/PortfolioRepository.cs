@@ -17,11 +17,22 @@ namespace StockMarket.DataAccess.Repositories
             _context = context;
         }
 
+        public async Task<Portfolio?> Get(int id)
+        {
+            return await _context.Portfolios.FindAsync(id);
+        }
+
         public async Task<Portfolio> Create(Portfolio portfolio)
         {
             _context.Portfolios.Add(portfolio);
             await _context.SaveChangesAsync();
             return portfolio;
+        }
+
+        public async Task Update(Portfolio portfolio)
+        {
+            _context.Entry(portfolio).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
@@ -34,25 +45,19 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
-        public async Task<Portfolio?> Get(int id)
+        public async Task<List<Portfolio>> GetByStockId(int id)
         {
-            return await _context.Portfolios.FindAsync(id);
+            return await _context.Portfolios.Where(p => p.StockId == id).ToListAsync();
         }
 
-        public async Task<Portfolio?> GetByStockId(int id)
+        public async Task<List<Portfolio>> GetByUserId(int id)
         {
-            return await _context.Portfolios.FirstOrDefaultAsync(p => p.StockId == id);
+            return await _context.Portfolios.Where(p => p.UserId == id).ToListAsync();
         }
 
-        public async Task<Portfolio?> GetByUserId(int id)
+        public async Task<Portfolio?> GetPortfolio(int userId, int stockId)
         {
-            return await _context.Portfolios.FirstOrDefaultAsync(p => p.UserId == id);
-        }
-
-        public async Task Update(Portfolio portfolio)
-        {
-            _context.Entry(portfolio).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return await _context.Portfolios.FirstOrDefaultAsync(p => p.UserId == userId && p.StockId == stockId);
         }
     }
 }

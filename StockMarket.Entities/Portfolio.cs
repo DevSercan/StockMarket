@@ -13,5 +13,6 @@ namespace StockMarket.Entities
         public int Id { get; set; } // Primary Key
         public int UserId { get; set; } // Foreign Key
         public int StockId { get; set; } // Foreign Key
+        public int Quantity { get; set; }
     }
 }

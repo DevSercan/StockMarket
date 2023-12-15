@@ -86,5 +86,11 @@ namespace StockMarket.DataAccess.Repositories
                 return 0m;
             }
         }
+
+        public async Task<List<User>> GetByRoleId(int roleId)
+        {
+            return await _context.Users.Where(u => u.RoleId == roleId).ToListAsync();
+        }
+
     }
 }

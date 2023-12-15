@@ -17,5 +17,6 @@ namespace StockMarket.DataAccess.Repositories
         Task ChangeUserRole(int userId, int roleId);
         Task UpdateBalance(int userId, decimal balance);
         Task<decimal> GetBalanceById(int id);
+        Task<List<User>> GetByRoleId(int roleId);
     }
 }

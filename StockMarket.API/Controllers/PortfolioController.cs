@@ -31,31 +31,31 @@ namespace StockMarket.API.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("GetByUserId/{userId}")]
-        public async Task<ActionResult<Portfolio?>> GetByUserId(int id)
+        [HttpGet("GetByUserId/{userId:int}")]
+        public async Task<ActionResult<List<Portfolio>>> GetByUserId(int userId)
         {
-            var portfolio = await _portfolioRepository.GetByUserId(id);
-            if (portfolio == null)
+            var portfolios = await _portfolioRepository.GetByUserId(userId);
+            if (portfolios == null || portfolios.Count == 0)
             {
-                return NotFound($"Portfolio not found for user with ID: {id}");
+                return NotFound($"Portfolio not found for user with ID: {userId}");
             }
-            return portfolio;
+            return portfolios;
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("GetByStockId/{stockId}")]
-        public async Task<ActionResult<Portfolio?>> GetByStockId(int id)
+        [HttpGet("GetByStockId/{stockId:int}")]
+        public async Task<ActionResult<List<Portfolio>>> GetByStockId(int stockId)
         {
-            var portfolio = await _portfolioRepository.GetByStockId(id);
-            if (portfolio == null)
+            var portfolios = await _portfolioRepository.GetByStockId(stockId);
+            if (portfolios == null || portfolios.Count == 0)
             {
-                return NotFound($"Portfolio not found for stock with ID: {id}");
+                return NotFound($"Portfolio not found for stock with ID: {stockId}");
             }
-            return portfolio;
+            return portfolios;
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("GetPortfolio/{id}")]
+        [HttpGet("GetPortfolio/{id:int}")]
         public async Task<ActionResult<Portfolio?>> GetPortfolio(int id)
         {
             return await _portfolioRepository.Get(id);

@@ -34,7 +34,7 @@ namespace StockMarket.DataAccess.Repositories
             {
                 throw new ArgumentException("Invalid Commission Id");
             }
-            commission.CommissionRate = commissionRate;
+            commission.CommissionRate = Math.Round(commissionRate, 3);
             _context.Entry(commission).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
