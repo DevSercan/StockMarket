@@ -33,31 +33,6 @@ namespace StockMarket.API.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPut("UpdateStock/{id}")]
-        public async Task<ActionResult> UpdateStock(int id, [FromBody] Stock stock)
-        {
-            if (id != stock.Id)
-            {
-                return BadRequest();
-            }
-            await _stockRepository.Update(stock);
-
-            return NoContent();
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpDelete("DeleteStock/{id}")]
-        public async Task<ActionResult> DeleteStock(int id)
-        {
-            var stockToDelete = await _stockRepository.Get(id);
-            if (stockToDelete == null)
-                return BadRequest();
-            await _stockRepository.Delete(stockToDelete.Id);
-
-            return NoContent();
-        }
-
-        [Authorize(Roles = "admin")]
         [HttpPatch("SetActivity/{id:int}/{status:bool}")]
         public async Task<ActionResult<Stock>> SetActivity(int id, bool status)
         {

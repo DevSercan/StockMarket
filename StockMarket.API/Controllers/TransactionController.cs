@@ -16,14 +16,16 @@ namespace StockMarket.API.Controllers
         private readonly ICommissionRepository _commissionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPortfolioRepository _portfolioRepository;
+        private readonly IBalanceCardRepository _balanceCardRepository;
         private readonly StockService _stockService;
-        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, StockService stockService)
+        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, IBalanceCardRepository balanceCardRepository, StockService stockService)
         {
             _transactionRepository = transactionRepository;
             _stockRepository = stockRepository;
             _commissionRepository = commissionRepository;
             _userRepository = userRepository;
             _portfolioRepository = portfolioRepository;
+            _balanceCardRepository = balanceCardRepository;
             _stockService = stockService;
         }
 
@@ -162,6 +164,31 @@ namespace StockMarket.API.Controllers
             {
                 return StatusCode(200, "The stock is not active!");
             }
+        }
+
+        [HttpPost("UseBalanceCard/{userId:int}")]
+        public async Task<ActionResult> UseBalanceCard(int userId, [FromBody] string balanceCardCode)
+        {
+            var balanceCard = await _balanceCardRepository.GetByCode(balanceCardCode);
+            if (balanceCard == null)
+            {
+                return StatusCode(200, "This balance card code is invalid.");
+            }
+            if (balanceCard.Balance == 0)
+            {
+                return StatusCode(200, "There is no money on this balance card.");
+            }
+            if (balanceCard.IsUsed == true)
+            {
+                return StatusCode(200, "This balance card code has already been used.");
+            }
+            decimal balance = await _userRepository.GetBalanceById(userId);
+            await _userRepository.UpdateBalance(userId, balance + balanceCard.Balance);
+            balanceCard.UserId = userId;
+            balanceCard.IsUsed = true;
+            balanceCard.Balance = 0;
+            await _balanceCardRepository.Update(balanceCard);
+            return StatusCode(200, $"The account has been loaded with 1000 units of balance using the code '{balanceCardCode}'.");
         }
     }
 }
