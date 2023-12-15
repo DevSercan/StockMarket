@@ -61,9 +61,15 @@ namespace StockMarket.API.Controllers.Services
         {
             await _stockRepository.UpdatePriceByName(stock.Name, price);
             var history = await _priceHistoryRepository.GetByStockId(stock.Id);
-            if (history == null || history.Price != price)
+            if (history == null)
             {
                 await _priceHistoryRepository.Create(stock.Id, price);
+            } else
+            {
+                if (history.Price != price)
+                {
+                    await _priceHistoryRepository.Create(stock.Id, price);
+                }
             }
         }
     }
