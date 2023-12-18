@@ -12,15 +12,36 @@ namespace StockMarket.API.Controllers
     public class CommissionController : ControllerBase
     {
         private readonly ICommissionRepository _commissionRepository;
-        public CommissionController(ICommissionRepository commissionRepository)
+        private readonly ILogger<CommissionController> _logger;
+        public CommissionController(ICommissionRepository commissionRepository, ILogger<CommissionController> logger)
         {
             _commissionRepository = commissionRepository;
+            _logger = logger;
         }
 
         [HttpGet("GetCommissions/")]
         public async Task<ActionResult<List<Commission>>> GetCommissions()
         {
-            return await _commissionRepository.GetAll();
+            _logger.LogInformation("'GetCommissions' method executed.");
+            try
+            {
+                var commissions = await _commissionRepository.GetAll();
+
+                if (commissions != null)
+                {
+                    _logger.LogInformation("All commissions have been fetched.");
+                }
+                else
+                {
+                    _logger.LogWarning("No commissions found.");
+                }
+                return commissions;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting commissions.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

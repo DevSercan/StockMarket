@@ -12,47 +12,85 @@ namespace StockMarket.API.Controllers
     public class StockController : ControllerBase
     {
         private readonly IStockRepository _stockRepository;
+        private readonly ILogger<StockController> _logger;
 
-        public StockController(IStockRepository stockRepository)
+        public StockController(IStockRepository stockRepository, ILogger<StockController> logger)
         {
             _stockRepository = stockRepository;
+            _logger = logger;
         }
 
         [HttpGet("GetStock/{id}")]
         public async Task<ActionResult<Stock?>> GetStock(int id)
         {
-            return await _stockRepository.Get(id);
+            _logger.LogInformation("'GetStock' method executed.");
+            try
+            {
+                var stock = await _stockRepository.Get(id);
+
+                if (stock == null)
+                {
+                    _logger.LogWarning("Stock not found. StockId: {StockId}", id);
+                    return NotFound($"Stock not found. StockId: {id}");
+                }
+
+                _logger.LogInformation("Stock retrieved successfully. StockId: {StockId}", id);
+                return stock;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting stock by ID.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost("CreateStock")]
         public async Task<ActionResult<Stock>> CreateStock([FromBody] Stock stock)
         {
-            var newStock = await _stockRepository.Create(stock);
-            return CreatedAtAction(nameof(CreateStock), new { id = newStock.Id }, newStock);
+            _logger.LogInformation("'CreateStock' method executed.");
+            try
+            {
+                var newStock = await _stockRepository.Create(stock);
+
+                _logger.LogInformation("Stock created successfully. StockId: {StockId}", newStock.Id);
+                return CreatedAtAction(nameof(CreateStock), new { id = newStock.Id }, newStock);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during stock creation.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpPatch("SetActivity/{id:int}/{status:bool}")]
         public async Task<ActionResult<Stock>> SetActivity(int id, bool status)
         {
+            _logger.LogInformation("'SetActivity' method executed.");
             try
             {
                 await _stockRepository.ChangeStockActivity(id, status);
                 var stock = await _stockRepository.Get(id);
+
                 if (stock == null)
                 {
+                    _logger.LogWarning("Stock not found after activity status update. StockId: {StockId}", id);
                     return NotFound("Stock not found after activity status update");
                 }
+
+                _logger.LogInformation("Stock activity status updated successfully. StockId: {StockId}, IsActive: {IsActive}", id, status);
                 return Ok(stock);
             }
             catch (ArgumentException ex)
             {
+                _logger.LogError(ex, "Invalid argument provided during stock activity status update.");
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                _logger.LogError(ex, "Error occurred during stock activity status update.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
     }

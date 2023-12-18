@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using StockMarket.API.Controllers.Services;
 using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
@@ -20,91 +21,162 @@ namespace StockMarket.API.Controllers
         private readonly TokenService _tokenService;
         private readonly IRoleRepository _roleRepository;
         private readonly StockService _stockService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository, StockService stockService)
+        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository, StockService stockService, ILogger<UserController> logger)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _roleRepository = roleRepository;
             _stockService = stockService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register([FromBody] UserRegisterDTO user)
         {
-            var newUser = new User
+            _logger.LogInformation("'Register' method executed.");
+            try
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password,
-                RoleId = 2,
-                Balance = 0
-            };
-            var registeredUser = await _userRepository.Create(newUser);
-            return CreatedAtAction(nameof(Register), new { id = registeredUser.Id }, registeredUser);
+                var newUser = new User
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Password = user.Password,
+                    RoleId = 2,
+                    Balance = 0
+                };
+                var registeredUser = await _userRepository.Create(newUser);
+                _logger.LogInformation("User registered successfully. UserId: {UserId}", registeredUser.Id);
+                return CreatedAtAction(nameof(Register), new { id = registeredUser.Id }, registeredUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during user registration.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login([FromBody] UserLoginDTO user)
         {
-            if (user == null)
+            _logger.LogInformation("'Login' method executed.");
+            try
             {
-                return BadRequest("Invalid user data");
-            }
-            var existingUser = await _userRepository.GetByEmail(user.Email);
-            if (existingUser == null || existingUser.Password != user.Password)
-            {
-                return Unauthorized("Invalid email or password");
-            }
+                if (user == null)
+                {
+                    _logger.LogWarning("Invalid user data during login attempt.");
+                    return BadRequest("Invalid user data");
+                }
+                var existingUser = await _userRepository.GetByEmail(user.Email);
+                if (existingUser == null || existingUser.Password != user.Password)
+                {
+                    _logger.LogWarning("Invalid email or password during login attempt for email: {UserEmail}", user.Email);
+                    return Unauthorized("Invalid email or password");
+                }
 
-            var role = await _roleRepository.Get(existingUser.RoleId);
-            var claims = new List<Claim>
+                var role = await _roleRepository.Get(existingUser.RoleId);
+                var claims = new List<Claim> { new Claim(ClaimTypes.Role, role.Name) };
+                var token = _tokenService.GenerateToken(claims);
+                _logger.LogInformation("User logged in successfully. UserId: {UserId}", existingUser.Id);
+                return Ok(new { User = existingUser, Token = token });
+            }
+            catch (Exception ex)
             {
-                new Claim(ClaimTypes.Role, role.Name)
-            };
-            var token = _tokenService.GenerateToken(claims);
-            return Ok(new { User = existingUser, Token = token });
+                _logger.LogError(ex, "Error occurred during user login.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet("GetUser/{id:int}")]
         public async Task<ActionResult<User?>> GetUser(int id)
         {
-            return await _userRepository.Get(id);
+            _logger.LogInformation("'GetUser' method executed.");
+            try
+            {
+                var user = await _userRepository.Get(id);
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found with id: {UserId}", id);
+                    return NotFound();
+                }
+                _logger.LogInformation("User found with id: {UserId}", id);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost("CreateUser")]
         public async Task<ActionResult<User>> CreateUser([FromBody] User user)
         {
-            var newUser = await _userRepository.Create(user);
-            return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
+            _logger.LogInformation("'CreateUser' method executed.");
+            try
+            {
+                var newUser = await _userRepository.Create(user);
+                _logger.LogInformation("User created successfully. UserId: {UserId}", newUser.Id);
+                return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during user creation.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpPut("UpdateUser/{id:int}")]
         public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
         {
-            if (id != user.Id)
+            _logger.LogInformation("'UpdateUser' method executed.");
+            try
             {
-                return BadRequest();
-            }
-            await _userRepository.Update(user);
+                if (id != user.Id)
+                {
+                    _logger.LogWarning("Invalid user ID provided during update. Provided ID: {ProvidedId}, User ID: {UserId}", id, user.Id);
+                    return BadRequest();
+                }
+                await _userRepository.Update(user);
 
-            return NoContent();
+                _logger.LogInformation("User updated successfully. UserId: {UserId}", user.Id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during user update.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         [Authorize(Roles = "admin")]
         [HttpDelete("DeleteUser/{id:int}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
-            var userToDelete = await _userRepository.Get(id);
-            if (userToDelete == null)
-                return BadRequest();
-            await _userRepository.Delete(userToDelete.Id);
+            _logger.LogInformation("'DeleteUser' method executed.");
+            try
+            {
+                var userToDelete = await _userRepository.Get(id);
+                if (userToDelete == null)
+                {
+                    _logger.LogWarning("User not found with id: {UserId}", id);
+                    return BadRequest();
+                }
+                await _userRepository.Delete(userToDelete.Id);
 
-            return NoContent();
+                _logger.LogInformation("User deleted successfully. UserId: {UserId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during user deletion.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using StockMarket.API.Controllers.Services;
 using StockMarket.DataAccess.Context;
 using StockMarket.DataAccess.Repositories;
@@ -11,7 +12,16 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(config)
+    .CreateLogger();
+
 // Add services to the container.
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddSerilog();
+});
 
 builder.Services.AddAuthentication(option =>
 {
@@ -57,7 +67,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "StockMarket", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        
+
         Name = "Authorization",
         Description = "Enter Your JWT Token",
         In = ParameterLocation.Header,
