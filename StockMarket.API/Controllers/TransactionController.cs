@@ -18,8 +18,8 @@ namespace StockMarket.API.Controllers
         private readonly IPortfolioRepository _portfolioRepository;
         private readonly IBalanceCardRepository _balanceCardRepository;
         private readonly ILogger<TransactionController> _logger;
-        private readonly StockService _stockService;
-        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, IBalanceCardRepository balanceCardRepository, ILogger<TransactionController> logger,StockService stockService)
+        private readonly IStockService _stockService;
+        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, IBalanceCardRepository balanceCardRepository, ILogger<TransactionController> logger, IStockService stockService)
         {
             _transactionRepository = transactionRepository;
             _stockRepository = stockRepository;
@@ -31,33 +31,72 @@ namespace StockMarket.API.Controllers
             _stockService = stockService;
         }
 
+        private async Task<ActionResult> IsStockActive(int stockId)
+        {
+            bool isActive = await _stockRepository.GetActivityById(stockId);
+            if (!isActive)
+            {
+                _logger.LogWarning("The stock is not active. StockId: {StockId}", stockId);
+                return StatusCode(200, "The stock is not active!");
+            }
+            return null;
+        }
+
+        private ActionResult ValidateParameters(int userId, int stockId, int quantity)
+        {
+            if (userId <= 0 || stockId <= 0 || quantity <= 0)
+            {
+                _logger.LogWarning("Invalid parameters. UserId: {UserId}, StockId: {StockId}, Quantity: {Quantity}", userId, stockId, quantity);
+                return StatusCode(400, "The parameters must be positive values.");
+            }
+            return null;
+        }
+
+        private async Task<User> GetVaultUser()
+        {
+            var vaultList = await _userRepository.GetByRoleId(3);
+            if (vaultList == null || vaultList.Count == 0)
+            {
+                _logger.LogError("The vault in the system could not be accessed.");
+                return null;
+            }
+            return vaultList[0];
+        }
+
+        private Transaction CreateTransaction(int userId, int stockId, string transactionType, int quantity, decimal price, decimal commissionRate)
+        {
+            DateTime date = DateTime.Now;
+            return new Transaction
+            {
+                UserId = userId,
+                StockId = stockId,
+                Type = transactionType,
+                Date = date,
+                Quantity = quantity,
+                Price = price,
+                Commission = commissionRate
+            };
+        }
+
         [HttpPost("BuyStock/{userId:int}/{stockId:int}/{quantity:int}")]
         public async Task<ActionResult> BuyStock(int userId, int stockId, int quantity)
         {
             _logger.LogInformation("'BuyStock' method executed.");
             try
             {
-                if (userId <= 0 || stockId <= 0 || quantity <= 0)
-                {
-                    _logger.LogWarning("Invalid parameters. UserId: {UserId}, StockId: {StockId}, Quantity: {Quantity}", userId, stockId, quantity);
-                    return StatusCode(400, "The parameters must be positive values.");
-                }
+                var parameterValidationResult = ValidateParameters(userId, stockId, quantity);
+                if (parameterValidationResult != null)
+                    return parameterValidationResult;
 
                 await _stockService.FetchStockData();
-                bool isActive = await _stockRepository.GetActivityById(stockId);
 
-                if (!isActive)
-                {
-                    _logger.LogWarning("The stock is not active. StockId: {StockId}", stockId);
-                    return StatusCode(200, "The stock is not active!");
-                }
+                var stockStatus = await IsStockActive(stockId);
+                if (stockStatus != null)
+                    return stockStatus;
 
-                var vaultList = await _userRepository.GetByRoleId(3);
-                if (vaultList == null || vaultList.Count == 0)
-                {
-                    _logger.LogError("The vault in the system could not be accessed.");
+                var vaultUser = await GetVaultUser();
+                if (vaultUser == null)
                     return StatusCode(200, "The vault in the system could not be accessed.");
-                }
 
                 decimal balance = await _userRepository.GetBalanceById(userId);
                 decimal price = await _stockRepository.GetPriceById(stockId);
@@ -83,25 +122,14 @@ namespace StockMarket.API.Controllers
                     return StatusCode(200, "The stock is less than the quantity you want to buy.");
                 }
 
-                DateTime date = DateTime.Now;
-                var newTransaction = new Transaction
-                {
-                    UserId = userId,
-                    StockId = stockId,
-                    Type = "Buy",
-                    Date = date,
-                    Quantity = quantity,
-                    Price = price,
-                    Commission = commissionRate
-                };
+                var newTransaction = CreateTransaction(userId, stockId, "Buy", quantity, price, commissionRate);
 
                 var buyingTransaction = await _transactionRepository.Create(newTransaction);
 
                 await _userRepository.UpdateBalance(userId, balance - (price + commission));
 
-                var vault = vaultList[0];
-                vault.Balance = vault.Balance + commission;
-                await _userRepository.Update(vault);
+                vaultUser.Balance = vaultUser.Balance + commission;
+                await _userRepository.Update(vaultUser);
                 await _stockRepository.UpdateQuantityById(stockId, stockQuantity - quantity);
 
                 var portfolio = await _portfolioRepository.GetPortfolio(userId, stockId);
@@ -137,27 +165,19 @@ namespace StockMarket.API.Controllers
             _logger.LogInformation("'SellStock' method executed.");
             try
             {
-                if (userId <= 0 || stockId <= 0 || quantity <= 0)
-                {
-                    _logger.LogWarning("Invalid parameters. UserId: {UserId}, StockId: {StockId}, Quantity: {Quantity}", userId, stockId, quantity);
-                    return StatusCode(400, "The parameters must be positive values.");
-                }
+                var parameterValidationResult = ValidateParameters(userId, stockId, quantity);
+                if (parameterValidationResult != null)
+                    return parameterValidationResult;
 
                 await _stockService.FetchStockData();
-                bool isActive = await _stockRepository.GetActivityById(stockId);
 
-                if (!isActive)
-                {
-                    _logger.LogWarning("The stock is not active. StockId: {StockId}", stockId);
-                    return StatusCode(200, "The stock is not active!");
-                }
+                var stockStatus = await IsStockActive(stockId);
+                if (stockStatus != null)
+                    return stockStatus;
 
-                var vaultList = await _userRepository.GetByRoleId(3);
-                if (vaultList == null || vaultList.Count == 0)
-                {
-                    _logger.LogError("The vault in the system could not be accessed.");
+                var vaultUser = await GetVaultUser();
+                if (vaultUser == null)
                     return StatusCode(200, "The vault in the system could not be accessed.");
-                }
 
                 decimal balance = await _userRepository.GetBalanceById(userId);
                 decimal price = await _stockRepository.GetPriceById(stockId);
@@ -183,28 +203,17 @@ namespace StockMarket.API.Controllers
                     return StatusCode(200, "You do not have this stock for the amount you want to sell.");
                 }
 
-                DateTime date = DateTime.Now;
                 decimal commissionRate = await _commissionRepository.GetCommissionRateById(1);
                 decimal commission = price * commissionRate;
 
-                var newTransaction = new Transaction
-                {
-                    UserId = userId,
-                    StockId = stockId,
-                    Type = "Sell",
-                    Date = date,
-                    Quantity = quantity,
-                    Price = price,
-                    Commission = commissionRate
-                };
+                var newTransaction = CreateTransaction(userId, stockId, "Sell", quantity, price, commissionRate);
 
                 var sellingTransaction = await _transactionRepository.Create(newTransaction);
 
                 await _userRepository.UpdateBalance(userId, balance + (price - commission));
 
-                var vault = vaultList[0];
-                vault.Balance = vault.Balance + commission;
-                await _userRepository.Update(vault);
+                vaultUser.Balance = vaultUser.Balance + commission;
+                await _userRepository.Update(vaultUser);
 
                 int stockQuantity = await _stockRepository.GetQuantityById(stockId);
                 await _stockRepository.UpdateQuantityById(stockId, stockQuantity + quantity);

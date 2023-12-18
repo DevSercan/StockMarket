@@ -11,7 +11,7 @@ using System.Globalization;
 
 namespace StockMarket.API.Controllers.Services
 {
-    public class StockService
+    public class StockService : IStockService
     {
         private readonly IStockRepository _stockRepository;
         private readonly IPriceHistoryRepository _priceHistoryRepository;
@@ -72,7 +72,7 @@ namespace StockMarket.API.Controllers.Services
             }
 
         }
-        private async Task UpdateStockHistory(Stock stock, decimal price)
+        public async Task UpdateStockHistory(Stock stock, decimal price)
         {
             _logger.LogInformation("'UpdateStockHistory' method executed.");
             try

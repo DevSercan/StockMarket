@@ -45,8 +45,6 @@ builder.Services.AddAuthentication(option =>
 });
 builder.Services.AddAuthorization();
 
-builder.Services.AddSingleton<TokenService>();
-
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -55,7 +53,8 @@ builder.Services.AddScoped<IPriceHistoryRepository, PriceHistoryRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ICommissionRepository, CommissionRepository>();
 builder.Services.AddScoped<IBalanceCardRepository, BalanceCardRepository>();
-builder.Services.AddScoped<StockService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IStockService, StockService>();
 
 builder.Services.AddDbContext<StockMarketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketContext")));

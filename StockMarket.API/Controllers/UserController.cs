@@ -18,12 +18,12 @@ namespace StockMarket.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
         private readonly IRoleRepository _roleRepository;
-        private readonly StockService _stockService;
+        private readonly IStockService _stockService;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserRepository userRepository, TokenService tokenService, IRoleRepository roleRepository, StockService stockService, ILogger<UserController> logger)
+        public UserController(IUserRepository userRepository, ITokenService tokenService, IRoleRepository roleRepository, IStockService stockService, ILogger<UserController> logger)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
@@ -32,21 +32,26 @@ namespace StockMarket.API.Controllers
             _logger = logger;
         }
 
+        private User MapToUser(UserRegisterDTO user)
+        {
+            return new User
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = user.Password,
+                RoleId = 2,
+                Balance = 0
+            };
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register([FromBody] UserRegisterDTO user)
         {
             _logger.LogInformation("'Register' method executed.");
             try
             {
-                var newUser = new User
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    Password = user.Password,
-                    RoleId = 2,
-                    Balance = 0
-                };
+                var newUser = MapToUser(user);
                 var registeredUser = await _userRepository.Create(newUser);
                 _logger.LogInformation("User registered successfully. UserId: {UserId}", registeredUser.Id);
                 return CreatedAtAction(nameof(Register), new { id = registeredUser.Id }, registeredUser);
@@ -76,9 +81,9 @@ namespace StockMarket.API.Controllers
                     return Unauthorized("Invalid email or password");
                 }
 
-                var role = await _roleRepository.Get(existingUser.RoleId);
-                var claims = new List<Claim> { new Claim(ClaimTypes.Role, role.Name) };
+                var claims = await _tokenService.GenerateClaims(existingUser);
                 var token = _tokenService.GenerateToken(claims);
+
                 _logger.LogInformation("User logged in successfully. UserId: {UserId}", existingUser.Id);
                 return Ok(new { User = existingUser, Token = token });
             }
