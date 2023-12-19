@@ -101,32 +101,34 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
-        public async Task<Transaction?> GetByUserId(int userId)
+        public async Task<List<Transaction>> GetByUserId(int userId)
         {
-            _logger.LogInformation($"Getting Transaction by UserId: {userId}");
+            _logger.LogInformation($"Getting Transactions by UserId: {userId}");
             try
             {
-                var transaction = await _context.Transactions
+                var transactions = await _context.Transactions
                     .Where(t => t.UserId == userId)
                     .OrderByDescending(t => t.Date)
-                    .FirstOrDefaultAsync();
+                    .ToListAsync();
 
-                if (transaction != null)
+                if (transactions != null && transactions.Any())
                 {
-                    _logger.LogInformation($"Successfully retrieved Transaction by UserId: {userId}");
+                    _logger.LogInformation($"Successfully retrieved Transactions by UserId: {userId}. Count: {transactions.Count}");
                 }
                 else
                 {
-                    _logger.LogWarning($"Transaction for UserId: {userId} not found");
+                    _logger.LogWarning($"No transactions found for UserId: {userId}");
                 }
-                return transaction;
+
+                return transactions;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error getting Transaction by UserId: {userId}. Error: {ex.Message}");
+                _logger.LogError($"Error getting Transactions by UserId: {userId}. Error: {ex.Message}");
                 throw;
             }
         }
+
     }
 
 }

@@ -12,11 +12,13 @@ namespace StockMarket.API.Controllers
     public class StockController : ControllerBase
     {
         private readonly IStockRepository _stockRepository;
+        private readonly IExcelService _excelService;
         private readonly ILogger<StockController> _logger;
 
-        public StockController(IStockRepository stockRepository, ILogger<StockController> logger)
+        public StockController(IStockRepository stockRepository, IExcelService excelService, ILogger<StockController> logger)
         {
             _stockRepository = stockRepository;
+            _excelService = excelService;
             _logger = logger;
         }
 
@@ -91,6 +93,28 @@ namespace StockMarket.API.Controllers
             {
                 _logger.LogError(ex, "Error occurred during stock activity status update.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+        }
+
+        [HttpGet("ExportStocksToExcel/")]
+        public async Task<ActionResult> ExportStocksToExcel()
+        {
+            _logger.LogInformation("Exporting stocks to Excel file has started.");
+            try
+            {
+                var excel = await _excelService.ExportStocksToExcel();
+                if (!excel)
+                {
+                    _logger.LogWarning("Exporting stocks to Excel file failed.");
+                    return StatusCode(200, "Exporting stocks to Excel file failed.");
+                }
+                _logger.LogInformation("Exporting stocks to Excel file was successful.");
+                return StatusCode(200, "Exporting stocks to Excel file was successful.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting stocks to Excel.");
+                return BadRequest($"Error exporting stocks to Excel: {ex.Message}");
             }
         }
     }

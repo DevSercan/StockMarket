@@ -43,6 +43,22 @@ namespace StockMarket.DataAccess.Repositories
             }
         }
 
+        public async Task<List<Stock>> GetAll()
+        {
+            _logger.LogInformation("Getting all stocks.");
+            try
+            {
+                var stocks = await _context.Stocks.ToListAsync();
+                _logger.LogInformation($"Successfully retrieved all stocks. Count: {stocks.Count}");
+                return stocks;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error getting all stocks. Error: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<Stock> Create(Stock stock)
         {
             _logger.LogInformation($"Creating new Stock with Name: {stock.Name}");

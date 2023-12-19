@@ -13,6 +13,6 @@ namespace StockMarket.DataAccess.Repositories
         Task<Transaction> Create(Transaction transaction);
         Task Update(Transaction transaction);
         Task Delete(int id);
-        Task<Transaction?> GetByUserId(int userId);
+        Task<List<Transaction>> GetByUserId(int userId);
     }
 }

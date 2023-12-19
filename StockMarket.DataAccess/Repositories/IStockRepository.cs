@@ -10,6 +10,7 @@ namespace StockMarket.DataAccess.Repositories
     public interface IStockRepository
     {
         Task<Stock?> Get(int id);
+        Task<List<Stock>> GetAll();
         Task<Stock> Create(Stock stock);
         Task Update(Stock stock);
         Task Delete(int id);

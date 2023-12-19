@@ -19,7 +19,8 @@ namespace StockMarket.API.Controllers
         private readonly IBalanceCardRepository _balanceCardRepository;
         private readonly ILogger<TransactionController> _logger;
         private readonly IStockService _stockService;
-        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, IBalanceCardRepository balanceCardRepository, ILogger<TransactionController> logger, IStockService stockService)
+        private readonly IExcelService _excelService;
+        public TransactionController(ITransactionRepository transactionRepository, IStockRepository stockRepository, ICommissionRepository commissionRepository, IUserRepository userRepository, IPortfolioRepository portfolioRepository, IBalanceCardRepository balanceCardRepository, ILogger<TransactionController> logger, IStockService stockService, IExcelService excelService)
         {
             _transactionRepository = transactionRepository;
             _stockRepository = stockRepository;
@@ -29,6 +30,7 @@ namespace StockMarket.API.Controllers
             _balanceCardRepository = balanceCardRepository;
             _logger = logger;
             _stockService = stockService;
+            _excelService = excelService;
         }
 
         private async Task<ActionResult> IsStockActive(int stockId)
@@ -280,5 +282,26 @@ namespace StockMarket.API.Controllers
             }
         }
 
+        [HttpGet("ExportTransactionsToExcel/{userId:int}")]
+        public async Task<ActionResult> ExportTransactionsToExcel(int userId)
+        {
+            _logger.LogInformation("Exporting transactions to Excel file has started.");
+            try
+            {
+                var excel = await _excelService.ExportTransactionsToExcel(userId);
+                if (!excel)
+                {
+                    _logger.LogWarning("Exporting transactions to Excel file failed.");
+                    return StatusCode(200, "Exporting transactions to Excel file failed.");
+                }
+                _logger.LogInformation("Exporting transactions to Excel file was successful.");
+                return StatusCode(200, "Exporting transactions to Excel file was successful.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting transactions to Excel.");
+                return BadRequest($"Error exporting transactions to Excel: {ex.Message}");
+            }
+        }
     }
 }

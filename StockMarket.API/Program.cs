@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OfficeOpenXml;
 using Serilog;
 using StockMarket.API.Controllers.Services;
 using StockMarket.DataAccess.Context;
@@ -45,6 +46,8 @@ builder.Services.AddAuthentication(option =>
 });
 builder.Services.AddAuthorization();
 
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -55,6 +58,7 @@ builder.Services.AddScoped<ICommissionRepository, CommissionRepository>();
 builder.Services.AddScoped<IBalanceCardRepository, BalanceCardRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IExcelService, ExcelService>();
 
 builder.Services.AddDbContext<StockMarketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketContext")));
