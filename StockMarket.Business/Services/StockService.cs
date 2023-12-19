@@ -1,13 +1,8 @@
 ﻿using StockMarket.DataAccess.Repositories;
 using StockMarket.Entities;
-using System.Xml;
 using AngleSharp;
-using System.Net.Http;
 using AngleSharp.Html.Parser;
-using AngleSharp.Text;
-using Azure;
-using System.Diagnostics;
-using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace StockMarket.API.Controllers.Services
 {

@@ -1,7 +1,6 @@
-﻿using OfficeOpenXml;
-using StockMarket.Business.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using StockMarket.DataAccess.Repositories;
-using StockMarket.Entities;
 
 namespace StockMarket.API.Controllers.Services
 {

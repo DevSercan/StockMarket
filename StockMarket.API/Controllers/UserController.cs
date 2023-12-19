@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Serilog;
 using StockMarket.API.Controllers.Services;
 using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
 using StockMarket.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace StockMarket.API.Controllers
 {

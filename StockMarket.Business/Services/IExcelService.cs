@@ -1,6 +1,4 @@
-﻿using StockMarket.Business.DTOs;
-
-namespace StockMarket.API.Controllers.Services
+﻿namespace StockMarket.API.Controllers.Services
 {
     public interface IExcelService
     {

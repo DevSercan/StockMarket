@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockMarket.API.Controllers.Services;
-using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
 using StockMarket.Entities;
 
