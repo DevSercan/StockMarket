@@ -2,7 +2,7 @@
 ### About This Project
 This is a Web API service of a platform where registered users, with the admin role, can manage stock portfolios and perform buying and selling transactions.
 
-You can access the database design of this project from the following link:
+You can access the database design of this project from the following link: 
 https://dbdiagram.io/d/StockMarket-6565fa053be1495787e5feb7
 
 ### Things you need to know before using the database:
