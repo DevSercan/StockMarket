@@ -49,24 +49,6 @@ namespace StockMarket.API.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost("GetBalanceCards/")]
-        public async Task<ActionResult<List<BalanceCard>>> GetBalanceCards()
-        {
-            _logger.LogInformation("'GetBalanceCards' method executed.");
-            try
-            {
-                var balanceCards = await _balanceCardRepository.GetAll();
-                _logger.LogInformation("All balance cards have been fetched.");
-                return balanceCards;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while getting balance cards.");
-                return StatusCode(500, "An unexpected error occurred. Please try again.");
-            }
-        }
-
-        [Authorize(Roles = "admin")]
         [HttpPost("UpdateBalance/{balance:decimal}")]
         public async Task<ActionResult> UpdateBalance([FromBody] string balanceCardCode, decimal balance)
         {
@@ -97,6 +79,24 @@ namespace StockMarket.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred during balance update.");
+                return StatusCode(500, "An unexpected error occurred. Please try again.");
+            }
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("GetBalanceCards/")]
+        public async Task<ActionResult<List<BalanceCard>>> GetBalanceCards()
+        {
+            _logger.LogInformation("'GetBalanceCards' method executed.");
+            try
+            {
+                var balanceCards = await _balanceCardRepository.GetAll();
+                _logger.LogInformation("All balance cards have been fetched.");
+                return balanceCards;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting balance cards.");
                 return StatusCode(500, "An unexpected error occurred. Please try again.");
             }
         }

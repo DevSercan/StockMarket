@@ -24,6 +24,28 @@ namespace StockMarket.API.Controllers
             _logger = logger;
         }
 
+        [HttpGet("ExportStocksToExcel/")]
+        public async Task<ActionResult> ExportStocksToExcel()
+        {
+            _logger.LogInformation("Exporting stocks to Excel file has started.");
+            try
+            {
+                var excel = await _excelService.ExportStocksToExcel();
+                if (!excel)
+                {
+                    _logger.LogWarning("Exporting stocks to Excel file failed.");
+                    return StatusCode(200, "Exporting stocks to Excel file failed.");
+                }
+                _logger.LogInformation("Exporting stocks to Excel file was successful.");
+                return StatusCode(200, "Exporting stocks to Excel file was successful.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting stocks to Excel.");
+                return BadRequest($"Error exporting stocks to Excel: {ex.Message}");
+            }
+        }
+
         [HttpGet("GetStock/{id}")]
         public async Task<ActionResult<Stock?>> GetStock(int id)
         {
@@ -103,28 +125,6 @@ namespace StockMarket.API.Controllers
             {
                 _logger.LogError(ex, "Error occurred during stock activity status update.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
-        }
-
-        [HttpGet("ExportStocksToExcel/")]
-        public async Task<ActionResult> ExportStocksToExcel()
-        {
-            _logger.LogInformation("Exporting stocks to Excel file has started.");
-            try
-            {
-                var excel = await _excelService.ExportStocksToExcel();
-                if (!excel)
-                {
-                    _logger.LogWarning("Exporting stocks to Excel file failed.");
-                    return StatusCode(200, "Exporting stocks to Excel file failed.");
-                }
-                _logger.LogInformation("Exporting stocks to Excel file was successful.");
-                return StatusCode(200, "Exporting stocks to Excel file was successful.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error exporting stocks to Excel.");
-                return BadRequest($"Error exporting stocks to Excel: {ex.Message}");
             }
         }
     }
