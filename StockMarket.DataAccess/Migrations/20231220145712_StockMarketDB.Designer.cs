@@ -12,7 +12,7 @@ using StockMarket.DataAccess.Context;
 namespace StockMarket.DataAccess.Migrations
 {
     [DbContext(typeof(StockMarketContext))]
-    [Migration("20231220141702_StockMarketDB")]
+    [Migration("20231220145712_StockMarketDB")]
     partial class StockMarketDB
     {
         /// <inheritdoc />
