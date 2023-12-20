@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace StockMarket.Entities
@@ -15,5 +16,8 @@ namespace StockMarket.Entities
         public string Code { get; set; }
         public decimal Balance { get; set; }
         public bool IsUsed { get; set; }
+
+        [JsonIgnore]
+        public User User { get; set; }
     }
 }

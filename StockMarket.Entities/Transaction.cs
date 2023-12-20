@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace StockMarket.Entities
@@ -18,5 +19,10 @@ namespace StockMarket.Entities
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public decimal Commission { get; set; }
+
+        [JsonIgnore]
+        public User User { get; set; }
+        [JsonIgnore]
+        public Stock Stock { get; set; }
     }
 }

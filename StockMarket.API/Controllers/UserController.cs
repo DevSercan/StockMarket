@@ -45,6 +45,12 @@ namespace StockMarket.API.Controllers
             _logger.LogInformation("'Register' method executed.");
             try
             {
+                var existingUser = await _userRepository.GetByEmail(user.Email);
+                if (existingUser != null)
+                {
+                    _logger.LogInformation("User registration failed. Email '{Email}' is already taken.", user.Email);
+                    return StatusCode(StatusCodes.Status400BadRequest, "Email is already taken");
+                }
                 var newUser = MapToUser(user);
                 var registeredUser = await _userRepository.Create(newUser);
                 _logger.LogInformation("User registered successfully. UserId: {UserId}", registeredUser.Id);

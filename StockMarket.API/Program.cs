@@ -9,6 +9,7 @@ using StockMarket.DataAccess.Context;
 using StockMarket.DataAccess.Repositories;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -22,6 +23,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddLogging(loggingBuilder =>
 {
     loggingBuilder.AddSerilog();
+});
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
 builder.Services.AddAuthentication(option =>
@@ -62,6 +68,12 @@ builder.Services.AddScoped<IExcelService, ExcelService>();
 
 builder.Services.AddDbContext<StockMarketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketContext")));
+
+using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<StockMarketContext>();
+    dbContext.Database.Migrate();
+}
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

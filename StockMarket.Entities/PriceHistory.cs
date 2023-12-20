@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace StockMarket.Entities
@@ -14,5 +15,8 @@ namespace StockMarket.Entities
         public int StockId { get; set; } // Foreign Key
         public DateTime Date { get; set; }
         public decimal Price { get; set; }
+
+        [JsonIgnore]
+        public Stock Stock { get; set; }
     }
 }
