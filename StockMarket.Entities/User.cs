@@ -20,13 +20,13 @@ namespace StockMarket.Entities
         public decimal Balance { get; set; }
 
         [JsonIgnore]
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
         [JsonIgnore]
-        public ICollection<Portfolio> Portfolios { get; set; }
+        public ICollection<Portfolio>? Portfolios { get; set; }
         [JsonIgnore]
-        public ICollection<Transaction> Transactions { get; set; }
+        public ICollection<Transaction>? Transactions { get; set; }
         [JsonIgnore]
-        public ICollection<BalanceCard> BalanceCards { get; set; }
+        public ICollection<BalanceCard>? BalanceCards { get; set; }
 
     }
 }

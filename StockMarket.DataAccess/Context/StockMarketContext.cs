@@ -142,6 +142,10 @@ namespace StockMarket.DataAccess.Context
                 new Role { Id = 2, Name = "user" },
                 new Role { Id = 3, Name = "vault" }
             );
+
+            modelBuilder.Entity<Commission>().HasData(
+                new Commission { Id = 1, CommissionRate = 0.05m }
+            );
         }
     }
 }

@@ -28,7 +28,7 @@ namespace StockMarket.API.Controllers
             {
                 var newBalanceCard = new BalanceCard
                 {
-                    UserId = 0,
+                    UserId = 1,
                     Code = balanceCard.Code,
                     Balance = balanceCard.Balance
                 };

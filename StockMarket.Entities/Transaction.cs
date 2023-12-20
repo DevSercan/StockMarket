@@ -21,8 +21,8 @@ namespace StockMarket.Entities
         public decimal Commission { get; set; }
 
         [JsonIgnore]
-        public User User { get; set; }
+        public User? User { get; set; }
         [JsonIgnore]
-        public Stock Stock { get; set; }
+        public Stock? Stock { get; set; }
     }
 }

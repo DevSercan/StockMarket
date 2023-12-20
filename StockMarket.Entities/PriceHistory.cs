@@ -17,6 +17,6 @@ namespace StockMarket.Entities
         public decimal Price { get; set; }
 
         [JsonIgnore]
-        public Stock Stock { get; set; }
+        public Stock? Stock { get; set; }
     }
 }

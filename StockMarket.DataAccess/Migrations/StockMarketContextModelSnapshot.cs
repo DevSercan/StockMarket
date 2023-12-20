@@ -67,6 +67,13 @@ namespace StockMarket.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Commissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CommissionRate = 0.05m
+                        });
                 });
 
             modelBuilder.Entity("StockMarket.Entities.Portfolio", b =>

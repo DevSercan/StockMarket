@@ -18,10 +18,10 @@ namespace StockMarket.Entities
         public bool IsActive { get; set; }
 
         [JsonIgnore]
-        public ICollection<Portfolio> Portfolios { get; set; }
+        public ICollection<Portfolio>? Portfolios { get; set; }
         [JsonIgnore]
-        public ICollection<Transaction> Transactions { get; set; }
+        public ICollection<Transaction>? Transactions { get; set; }
         [JsonIgnore]
-        public ICollection<PriceHistory> PriceHistories { get; set; }
+        public ICollection<PriceHistory>? PriceHistories { get; set; }
     }
 }

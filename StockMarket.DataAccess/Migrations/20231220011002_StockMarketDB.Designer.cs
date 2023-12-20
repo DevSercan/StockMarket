@@ -12,7 +12,7 @@ using StockMarket.DataAccess.Context;
 namespace StockMarket.DataAccess.Migrations
 {
     [DbContext(typeof(StockMarketContext))]
-    [Migration("20231220003525_StockMarketDB")]
+    [Migration("20231220011002_StockMarketDB")]
     partial class StockMarketDB
     {
         /// <inheritdoc />
@@ -70,6 +70,13 @@ namespace StockMarket.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Commissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CommissionRate = 0.05m
+                        });
                 });
 
             modelBuilder.Entity("StockMarket.Entities.Portfolio", b =>

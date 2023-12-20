@@ -181,6 +181,11 @@ namespace StockMarket.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Commissions",
+                columns: new[] { "Id", "CommissionRate" },
+                values: new object[] { 1, 0.05m });
+
+            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]

@@ -18,6 +18,6 @@ namespace StockMarket.Entities
         public bool IsUsed { get; set; }
 
         [JsonIgnore]
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }
