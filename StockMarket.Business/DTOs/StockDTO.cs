@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace StockMarket.Business.DTOs
 {
-    public class PortfolioDTO
+    public class StockDTO
     {
-        public int UserId { get; set; } // Foreign Key
-        public int StockId { get; set; } // Foreign Key
+        public string Name { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
+        public bool IsActive { get; set; }
     }
 }

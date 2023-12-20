@@ -11,10 +11,14 @@ namespace StockMarket.API.Controllers
     public class PortfolioController : ControllerBase
     {
         private readonly IPortfolioRepository _portfolioRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IStockRepository _stockRepository;
         private readonly ILogger<PortfolioController> _logger;
-        public PortfolioController(IPortfolioRepository portfolioRepository, ILogger<PortfolioController> logger)
+        public PortfolioController(IPortfolioRepository portfolioRepository, IUserRepository userRepository, IStockRepository stockRepository, ILogger<PortfolioController> logger)
         {
             _portfolioRepository = portfolioRepository;
+            _userRepository = userRepository;
+            _stockRepository = stockRepository;
             _logger = logger;
         }
 
@@ -25,10 +29,38 @@ namespace StockMarket.API.Controllers
             _logger.LogInformation("'CreatePortfolio' method executed.");
             try
             {
+                var existingUser = await _userRepository.Get(portfolio.UserId);
+                if (existingUser == null)
+                {
+                    _logger.LogWarning("User not found. UserId: {UserId}", portfolio.UserId);
+                    return NotFound($"User not found. UserId: {portfolio.UserId}");
+                }
+
+                var existingStock = await _stockRepository.Get(portfolio.StockId);
+                if (existingStock == null)
+                {
+                    _logger.LogWarning("Stock not found. StockId: {StockId}", portfolio.StockId);
+                    return NotFound($"Stock not found. StockId: {portfolio.StockId}");
+                }
+
+                var existingPortfolio = await _portfolioRepository.GetByStockId(portfolio.StockId);
+                if (existingPortfolio != null)
+                {
+                    foreach (var p in existingPortfolio)
+                    {
+                        if (p.UserId == portfolio.UserId && p.StockId == portfolio.StockId)
+                        {
+                            _logger.LogWarning("This user already has this stock in portfolio.");
+                            return NotFound($"This user already has this stock in portfolio.");
+                        } 
+                    }
+                }
+
                 var newPortfolio = new Portfolio
                 {
                     UserId = portfolio.UserId,
-                    StockId = portfolio.StockId
+                    StockId = portfolio.StockId,
+                    Quantity = portfolio.Quantity
                 };
                 var createdPortfolio = await _portfolioRepository.Create(newPortfolio);
 

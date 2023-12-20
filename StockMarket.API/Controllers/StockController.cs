@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockMarket.API.Controllers.Services;
+using StockMarket.Business.DTOs;
 using StockMarket.DataAccess.Repositories;
 using StockMarket.Entities;
 
@@ -11,12 +12,14 @@ namespace StockMarket.API.Controllers
     public class StockController : ControllerBase
     {
         private readonly IStockRepository _stockRepository;
+        private readonly IStockService _stockService;
         private readonly IExcelService _excelService;
         private readonly ILogger<StockController> _logger;
 
-        public StockController(IStockRepository stockRepository, IExcelService excelService, ILogger<StockController> logger)
+        public StockController(IStockRepository stockRepository, IStockService stockService, IExcelService excelService, ILogger<StockController> logger)
         {
             _stockRepository = stockRepository;
+            _stockService = stockService;
             _excelService = excelService;
             _logger = logger;
         }
@@ -27,6 +30,7 @@ namespace StockMarket.API.Controllers
             _logger.LogInformation("'GetStock' method executed.");
             try
             {
+                await _stockService.FetchStockData();
                 var stock = await _stockRepository.Get(id);
 
                 if (stock == null)
@@ -47,12 +51,19 @@ namespace StockMarket.API.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost("CreateStock")]
-        public async Task<ActionResult<Stock>> CreateStock([FromBody] Stock stock)
+        public async Task<ActionResult<Stock>> CreateStock([FromBody] StockDTO stock)
         {
             _logger.LogInformation("'CreateStock' method executed.");
             try
             {
-                var newStock = await _stockRepository.Create(stock);
+                var newStock = new Stock
+                {
+                    Name = stock.Name,
+                    Price = stock.Price,
+                    Quantity = stock.Quantity,
+                    IsActive = stock.IsActive
+                };
+                var createdStock = await _stockRepository.Create(newStock);
 
                 _logger.LogInformation("Stock created successfully. StockId: {StockId}", newStock.Id);
                 return CreatedAtAction(nameof(CreateStock), new { id = newStock.Id }, newStock);

@@ -118,48 +118,6 @@ namespace StockMarket.API.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost("CreateUser")]
-        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
-        {
-            _logger.LogInformation("'CreateUser' method executed.");
-            try
-            {
-                var newUser = await _userRepository.Create(user);
-                _logger.LogInformation("User created successfully. UserId: {UserId}", newUser.Id);
-                return CreatedAtAction(nameof(CreateUser), new { id = newUser.Id }, newUser);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred during user creation.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpPut("UpdateUser/{id:int}")]
-        public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
-        {
-            _logger.LogInformation("'UpdateUser' method executed.");
-            try
-            {
-                if (id != user.Id)
-                {
-                    _logger.LogWarning("Invalid user ID provided during update. Provided ID: {ProvidedId}, User ID: {UserId}", id, user.Id);
-                    return BadRequest();
-                }
-                await _userRepository.Update(user);
-
-                _logger.LogInformation("User updated successfully. UserId: {UserId}", user.Id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred during user update.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
-        }
-
-        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteUser/{id:int}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
