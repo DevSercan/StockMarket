@@ -1,0 +1,1102 @@
+{
+	"info": {
+		"_postman_id": "4abbb752-0b66-4ce9-bb2f-73009dfb7811",
+		"name": "StockMarket API",
+		"description": "This is a Web API service of a platform where registered users, with the admin role, can manage stock portfolios and perform buying and selling transactions.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31921940"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "UpdateBalance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId' and 'balance' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":balance\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/Admin/UpdateBalance/:userId/:balance",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Admin",
+								"UpdateBalance",
+								":userId",
+								":balance"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								},
+								{
+									"key": "balance",
+									"value": "<int>",
+									"description": "Balance (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangeUserRole",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId' and 'roleId' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":roleId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Admin/ChangeUserRole/:userId/:roleId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Admin",
+								"ChangeUserRole",
+								":userId",
+								":roleId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								},
+								{
+									"key": "roleId",
+									"value": "<int>",
+									"description": "Role Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCommissionRate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' and 'commissionRate' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\").and.to.not.include(\":commissionRate\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Admin/UpdateCommissionRate/:id/:commissionRate",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Admin",
+								"UpdateCommissionRate",
+								":id",
+								":commissionRate"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "Commission Id (integer)"
+								},
+								{
+									"key": "commissionRate",
+									"value": "<double>",
+									"description": "Commission Rate (double)"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "The requests in this collection allow administrators to modify user balances, user roles, and commission rates."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"string\",\r\n  \"lastName\": \"string\",\r\n  \"email\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/User/Register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"Register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/User/Login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/User/GetUser/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"GetUser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "User Id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/User/DeleteUser/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"DeleteUser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "User Id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection encompasses user registration, user login, user viewing, and user deletion requests."
+		},
+		{
+			"name": "Stock",
+			"item": [
+				{
+					"name": "ExportStocksToExcel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Stock/ExportStocksToExcel",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Stock",
+								"ExportStocksToExcel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetStock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Stock/GetStock/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Stock",
+								"GetStock",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "Stock Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateStock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"string\",\r\n  \"price\": 0,\r\n  \"quantity\": 0,\r\n  \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/Stock/CreateStock",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Stock",
+								"CreateStock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetActivity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' and 'status' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\").and.to.not.include(\":status\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Stock/SetActivity/:id/:status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Stock",
+								"SetActivity",
+								":id",
+								":status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "Stock Id (integer)"
+								},
+								{
+									"key": "status",
+									"value": "<boolean>",
+									"description": "Status (boolean)"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection includes requests for exporting stocks as an Excel file, viewing stocks, creating stocks, and changing the active status of stocks."
+		},
+		{
+			"name": "Portfolio",
+			"item": [
+				{
+					"name": "CreatePortfolio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 0,\r\n  \"stockId\": 0,\r\n  \"quantity\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/Portfolio/CreatePortfolio",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Portfolio",
+								"CreatePortfolio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByUserId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Portfolio/GetByUserId/:userId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Portfolio",
+								"GetByUserId",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByStockId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'stockId' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":stockId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Portfolio/GetByStockId/:stockId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Portfolio",
+								"GetByStockId",
+								":stockId"
+							],
+							"variable": [
+								{
+									"key": "stockId",
+									"value": "<int>",
+									"description": "Stock Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPortfolio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'id' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Portfolio/GetPortfolio/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Portfolio",
+								"GetPortfolio",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<int>",
+									"description": "Portfolio Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection includes requests for creating portfolios and viewing portfolios."
+		},
+		{
+			"name": "BalanceCard",
+			"item": [
+				{
+					"name": "CreateBalanceCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"code\": \"string\",\r\n  \"balance\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/BalanceCard/CreateBalanceCard",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"BalanceCard",
+								"CreateBalanceCard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBalanceCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"string\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/BalanceCard/UpdateBalance/:balance",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"BalanceCard",
+								"UpdateBalance",
+								":balance"
+							],
+							"variable": [
+								{
+									"key": "balance",
+									"value": "<int>",
+									"description": "Balance (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBalanceCards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/BalanceCard/GetBalanceCards",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"BalanceCard",
+								"GetBalanceCards"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection includes requests for creating balance cards, updating the balance of a balance card, and viewing balance cards."
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "BuyStock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId', 'stockId' and 'quantity' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":stockId\").and.to.not.include(\":quantity\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Transaction/BuyStock/:userId/:stockId/:quantity",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Transaction",
+								"BuyStock",
+								":userId",
+								":stockId",
+								":quantity"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								},
+								{
+									"key": "stockId",
+									"value": "<int>",
+									"description": "Stock Id (integer)"
+								},
+								{
+									"key": "quantity",
+									"value": "<int>",
+									"description": "Quantity (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SellStock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId', 'stockId' and 'quantity' parameters.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":stockId\").and.to.not.include(\":quantity\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Transaction/SellStock/:userId/:stockId/:quantity",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Transaction",
+								"SellStock",
+								":userId",
+								":stockId",
+								":quantity"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								},
+								{
+									"key": "stockId",
+									"value": "<int>",
+									"description": "Stock Id (integer)"
+								},
+								{
+									"key": "quantity",
+									"value": "<int>",
+									"description": "Quantity (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UseBalanceCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"string\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/Transaction/UseBalanceCard/:userId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Transaction",
+								"UseBalanceCard",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExportTransactionsToExcel",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify that the request URL contains the 'userId' parameter.\", function () {\r",
+									"    const requestUrl = pm.request.url.toString();\r",
+									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Transaction/ExportTransactionsToExcel/:userId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Transaction",
+								"ExportTransactionsToExcel",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "<int>",
+									"description": "User Id (integer)"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection includes requests for buying stocks, selling stocks, using balance cards, and generating transaction history as an Excel file."
+		},
+		{
+			"name": "Commission",
+			"item": [
+				{
+					"name": "GetCommissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/Commission/GetCommissions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Commission",
+								"GetCommissions"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This collection includes a request to view commission rates."
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://localhost:7267",
+			"type": "string"
+		},
+		{
+			"key": "statusCode401",
+			"value": "Authorization error! Please the Bearer Token value in the parent collection.",
+			"type": "string"
+		}
+	]
+}
