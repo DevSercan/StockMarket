@@ -39,7 +39,7 @@ namespace StockMarket.API.Controllers
             };
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<ActionResult<User>> Register([FromBody] UserRegisterDTO user)
         {
             _logger.LogInformation("'Register' method executed.");
@@ -63,7 +63,7 @@ namespace StockMarket.API.Controllers
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<User>> Login([FromBody] UserLoginDTO user)
         {
             _logger.LogInformation("'Login' method executed.");

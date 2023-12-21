@@ -37,7 +37,7 @@ namespace StockMarket.API.Controllers
             if (!isActive)
             {
                 _logger.LogWarning("The stock is not active. StockId: {StockId}", stockId);
-                return StatusCode(200, "The stock is not active!");
+                return StatusCode(400, "The stock is not active!");
             }
             return null;
         }
