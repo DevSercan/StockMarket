@@ -34,10 +34,10 @@ namespace StockMarket.API.Controllers
                 if (!excel)
                 {
                     _logger.LogWarning("Exporting stocks to Excel file failed.");
-                    return StatusCode(200, "Exporting stocks to Excel file failed.");
+                    return BadRequest("Exporting stocks to Excel file failed");
                 }
                 _logger.LogInformation("Exporting stocks to Excel file was successful.");
-                return StatusCode(200, "Exporting stocks to Excel file was successful.");
+                return StatusCode(200, "Exporting stocks to Excel file was successful");
             }
             catch (Exception ex)
             {

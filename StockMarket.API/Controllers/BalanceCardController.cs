@@ -59,12 +59,12 @@ namespace StockMarket.API.Controllers
                 if (balanceCard == null)
                 {
                     _logger.LogInformation("Invalid balance card code: {BalanceCardCode}", balanceCardCode);
-                    return StatusCode(200, "This balance card code is invalid.");
+                    return BadRequest("This balance card code is invalid");
                 }
                 if (balanceCard.IsUsed == true)
                 {
                     _logger.LogInformation("Balance card with code '{BalanceCardCode}' has already been used.", balanceCardCode);
-                    return StatusCode(200, "This balance card code has already been used.");
+                    return Conflict("This balance card code has already been used");
                 }
                 balanceCard.Balance = balance;
                 await _balanceCardRepository.Update(balanceCard);

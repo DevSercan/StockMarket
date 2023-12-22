@@ -22,8 +22,24 @@
 									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":balance\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"User balance updated successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Argument exception occurred during balance update\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User not found after balance update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during user balance update\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -82,9 +98,26 @@
 									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":roleId\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"User role changed successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Argument exception occurred during role change\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"User not found after role change\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during user role change\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -133,8 +166,24 @@
 									"    pm.expect(requestUrl).to.not.include(\":id\").and.to.not.include(\":commissionRate\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Commission rate updated successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Argument exception occurred during commission rate update\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Commission not found after commission rate update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during commission rate update\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -185,7 +234,17 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.test(\"User registered successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email is already taken\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during user registration\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -196,7 +255,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"firstName\": \"string\",\r\n  \"lastName\": \"string\",\r\n  \"email\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"raw": "{\r\n  \"firstName\": \"string\",\r\n  \"lastName\": \"string\",\r\n  \"email\": \"string1\",\r\n  \"password\": \"string\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,7 +283,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.test(\"User logged in successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid user data\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid email or password\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during user login\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -268,8 +341,20 @@
 									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"User found\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting user\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -313,9 +398,21 @@
 									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"User deleted successfully\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User not found\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"}); \r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during user deletion\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"}); "
 								],
 								"type": "text/javascript"
 							}
@@ -354,6 +451,23 @@
 			"item": [
 				{
 					"name": "ExportStocksToExcel",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Exporting stocks to Excel file was successful\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Exporting stocks to Excel file failed\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -381,6 +495,18 @@
 									"pm.test(\"Verify that the request URL contains the 'id' parameter.\", function () {\r",
 									"    const requestUrl = pm.request.url.toString();\r",
 									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock retrieved successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting stock by ID\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -419,9 +545,18 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Stock created successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during stock creation\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -465,8 +600,24 @@
 									"    pm.expect(requestUrl).to.not.include(\":id\").and.to.not.include(\":status\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Stock activity status updated successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid argument provided during stock activity status update\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock not found after activity status update\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during stock activity status update\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -517,8 +668,24 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Portfolio created successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Required data not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"This user already has this stock in portfolio\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during portfolio creation\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -563,8 +730,20 @@
 									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Portfolios retrieved successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Portfolio not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting portfolios by user ID\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -608,8 +787,20 @@
 									"    pm.expect(requestUrl).to.not.include(\":stockId\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Portfolios retrieved successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Portfolio not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting portfolios by stock ID\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -653,8 +844,20 @@
 									"    pm.expect(requestUrl).to.not.include(\":id\");\r",
 									"});\r",
 									"\r",
+									"pm.test(\"Portfolio retrieved successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Portfolio not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting portfolio by ID\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -699,8 +902,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Balance card created successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during balance card creation\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -740,8 +951,24 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Balance updated\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"This balance card code is invalid\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"This balance card code has already been used\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during balance update\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -789,8 +1016,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"All balance cards have been fetched\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
 									"pm.test(pm.variables.get(\"statusCode401\"), function () {\r",
 									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting balance cards\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -830,6 +1065,30 @@
 									"pm.test(\"Verify that the request URL contains the 'userId', 'stockId' and 'quantity' parameters.\", function () {\r",
 									"    const requestUrl = pm.request.url.toString();\r",
 									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":stockId\").and.to.not.include(\":quantity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock purchased successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The parameters must be positive values\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The user does not have enough money\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The stock is not active\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock quantity issue\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during stock purchase\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -883,6 +1142,22 @@
 									"pm.test(\"Verify that the request URL contains the 'userId', 'stockId' and 'quantity' parameters.\", function () {\r",
 									"    const requestUrl = pm.request.url.toString();\r",
 									"    pm.expect(requestUrl).to.not.include(\":userId\").and.to.not.include(\":stockId\").and.to.not.include(\":quantity\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock sold successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"You do not have this stock for the amount you want to sell\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The stock is not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during stock sale\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -936,6 +1211,30 @@
 									"pm.test(\"Verify that the request URL contains the 'userId' parameter.\", function () {\r",
 									"    const requestUrl = pm.request.url.toString();\r",
 									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Balance card used successfully\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Stock sold successfully\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"This balance card code is invalid\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"There is no money on this balance card\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"This balance card code has already been used\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred during balance card usage\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -986,6 +1285,18 @@
 									"pm.test(\"Verify that the request URL contains the 'userId' parameter.\", function () {\r",
 									"    const requestUrl = pm.request.url.toString();\r",
 									"    pm.expect(requestUrl).to.not.include(\":userId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Exporting transactions to Excel file was successful\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error exporting transactions to Excel\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Exporting transactions to Excel file failed\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1030,7 +1341,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.test(\"All commissions have been fetched\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error occurred while getting commissions\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}

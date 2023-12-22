@@ -51,7 +51,7 @@ namespace StockMarket.API.Controllers
                         if (p.UserId == portfolio.UserId && p.StockId == portfolio.StockId)
                         {
                             _logger.LogWarning("This user already has this stock in portfolio.");
-                            return NotFound($"This user already has this stock in portfolio.");
+                            return Conflict("This user already has this stock in portfolio.");
                         } 
                     }
                 }

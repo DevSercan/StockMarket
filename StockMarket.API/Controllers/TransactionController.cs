@@ -37,7 +37,7 @@ namespace StockMarket.API.Controllers
             if (!isActive)
             {
                 _logger.LogWarning("The stock is not active. StockId: {StockId}", stockId);
-                return StatusCode(400, "The stock is not active!");
+                return NotFound("The stock is not active");
             }
             return null;
         }
@@ -47,7 +47,7 @@ namespace StockMarket.API.Controllers
             if (userId <= 0 || stockId <= 0 || quantity <= 0)
             {
                 _logger.LogWarning("Invalid parameters. UserId: {UserId}, StockId: {StockId}, Quantity: {Quantity}", userId, stockId, quantity);
-                return StatusCode(400, "The parameters must be positive values.");
+                return BadRequest("The parameters must be positive values");
             }
             return null;
         }
@@ -96,7 +96,7 @@ namespace StockMarket.API.Controllers
 
                 var vaultUser = await GetVaultUser();
                 if (vaultUser == null)
-                    return StatusCode(200, "The vault in the system could not be accessed.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "The vault in the system could not be accessed");
 
                 decimal balance = await _userRepository.GetBalanceById(userId);
                 decimal price = await _stockRepository.GetPriceById(stockId);
@@ -107,19 +107,19 @@ namespace StockMarket.API.Controllers
                 if (balance < (price + commission))
                 {
                     _logger.LogWarning("The user does not have enough money. UserId: {UserId}, Balance: {Balance}, RequiredAmount: {RequiredAmount}", userId, balance, (price + commission));
-                    return StatusCode(200, "The user does not have enough money!");
+                    return Forbid("The user does not have enough money");
                 }
 
                 int stockQuantity = await _stockRepository.GetQuantityById(stockId);
                 if (stockQuantity == 0)
                 {
                     _logger.LogWarning("The stock is out of quantity. StockId: {StockId}", stockId);
-                    return StatusCode(200, "The stock is out of quantity.");
+                    return Conflict("The stock is out of quantity");
                 }
                 else if (stockQuantity < quantity)
                 {
                     _logger.LogWarning("The stock is less than the quantity you want to buy. StockId: {StockId}, RequestedQuantity: {RequestedQuantity}, AvailableQuantity: {AvailableQuantity}", stockId, quantity, stockQuantity);
-                    return StatusCode(200, "The stock is less than the quantity you want to buy.");
+                    return Conflict("The stock is less than the quantity you want to buy");
                 }
 
                 var newTransaction = CreateTransaction(userId, stockId, "Buy", quantity, price, commissionRate);
@@ -177,7 +177,7 @@ namespace StockMarket.API.Controllers
 
                 var vaultUser = await GetVaultUser();
                 if (vaultUser == null)
-                    return StatusCode(200, "The vault in the system could not be accessed.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "The vault in the system could not be accessed");
 
                 decimal balance = await _userRepository.GetBalanceById(userId);
                 decimal price = await _stockRepository.GetPriceById(stockId);
@@ -187,7 +187,7 @@ namespace StockMarket.API.Controllers
                 if (portfolio == null)
                 {
                     _logger.LogWarning("You do not have this stock in your portfolio. UserId: {UserId}, StockId: {StockId}", userId, stockId);
-                    return StatusCode(200, "You do not have this stock in your portfolio.");
+                    return NotFound("You do not have this stock in your portfolio");
                 }
 
                 int portfolioQuantity = portfolio.Quantity;
@@ -195,12 +195,12 @@ namespace StockMarket.API.Controllers
                 if (portfolioQuantity == 0)
                 {
                     _logger.LogWarning("You do not have this stock. UserId: {UserId}, StockId: {StockId}", userId, stockId);
-                    return StatusCode(200, "You do not have this stock.");
+                    return NotFound("You do not have this stock");
                 }
                 else if (portfolioQuantity < quantity)
                 {
                     _logger.LogWarning("You do not have this stock for the amount you want to sell. UserId: {UserId}, StockId: {StockId}, RequestedQuantity: {RequestedQuantity}, AvailableQuantity: {AvailableQuantity}", userId, stockId, quantity, portfolioQuantity);
-                    return StatusCode(200, "You do not have this stock for the amount you want to sell.");
+                    return BadRequest("You do not have this stock for the amount you want to sell");
                 }
 
                 decimal commissionRate = await _commissionRepository.GetCommissionRateById(1);
@@ -243,19 +243,19 @@ namespace StockMarket.API.Controllers
                 if (balanceCard == null)
                 {
                     _logger.LogWarning("Invalid balance card code. UserId: {UserId}, BalanceCardCode: {BalanceCardCode}", userId, balanceCardCode);
-                    return StatusCode(200, "This balance card code is invalid.");
+                    return BadRequest("This balance card code is invalid");
                 }
 
                 if (balanceCard.IsUsed == true)
                 {
                     _logger.LogWarning("Balance card has already been used. UserId: {UserId}, BalanceCardCode: {BalanceCardCode}", userId, balanceCardCode);
-                    return StatusCode(200, "This balance card code has already been used.");
+                    return Conflict("This balance card code has already been used");
                 }
 
                 if (balanceCard.Balance == 0)
                 {
                     _logger.LogWarning("Balance card has no money. UserId: {UserId}, BalanceCardCode: {BalanceCardCode}", userId, balanceCardCode);
-                    return StatusCode(200, "There is no money on this balance card.");
+                    return Forbid("There is no money on this balance card");
                 }
 
                 decimal balance = await _userRepository.GetBalanceById(userId);
@@ -271,7 +271,7 @@ namespace StockMarket.API.Controllers
                 await _balanceCardRepository.Update(balanceCard);
 
                 _logger.LogInformation("Balance card used successfully. UserId: {UserId}, BalanceCardCode: {BalanceCardCode}", userId, balanceCardCode);
-                return StatusCode(200, $"The account has been loaded with {balanceAmount} units of balance using the code '{balanceCardCode}'.");
+                return StatusCode(200, $"The account has been loaded with {balanceAmount} units of balance using the code '{balanceCardCode}'");
             }
             catch (Exception ex)
             {
@@ -290,10 +290,10 @@ namespace StockMarket.API.Controllers
                 if (!excel)
                 {
                     _logger.LogWarning("Exporting transactions to Excel file failed.");
-                    return StatusCode(200, "Exporting transactions to Excel file failed.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Exporting transactions to Excel file failed");
                 }
                 _logger.LogInformation("Exporting transactions to Excel file was successful.");
-                return StatusCode(200, "Exporting transactions to Excel file was successful.");
+                return StatusCode(200, "Exporting transactions to Excel file was successful");
             }
             catch (Exception ex)
             {

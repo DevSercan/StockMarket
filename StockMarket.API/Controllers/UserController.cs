@@ -49,7 +49,7 @@ namespace StockMarket.API.Controllers
                 if (existingUser != null)
                 {
                     _logger.LogInformation("User registration failed. Email '{Email}' is already taken.", user.Email);
-                    return StatusCode(StatusCodes.Status400BadRequest, "Email is already taken");
+                    return StatusCode(StatusCodes.Status409Conflict, "Email is already taken");
                 }
                 var newUser = MapToUser(user);
                 var registeredUser = await _userRepository.Create(newUser);
